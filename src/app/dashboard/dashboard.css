@@ -1,0 +1,11 @@
+.prd{
+    float: left ;
+    width: 200px;
+    height: 50px;
+    background-color: blueviolet;
+    margin: 5px;
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    align-content: center;
+}

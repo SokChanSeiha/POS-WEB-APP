@@ -1,0 +1,26 @@
+@for (p of products;  track $index){
+    <div class="prd" (click)="OnOrder(p.prdid, p.item, p.price)">
+        <span>{{p.prdid}}</span>
+        <span>{{p.item}}</span>
+        <span>${{p.price}}</span>
+    </div>
+    }
+ <button [innerText]="countOrder">Order: 0</button>
+
+ <!-- Add this after your existing code -->
+<div class="orders-container">
+  <h3>Order History</h3>
+  @for (order of pArray; track $index) {
+    <div class="order-item">
+      <span>ID: {{order.id}}</span>
+      <span>Item: {{order.item}}</span>
+      <span>Price: ${{order.price}}</span>
+      <span>Qty: {{order.qty}}</span>
+      <span>Status: {{order.status}}</span>
+    </div>
+  }
+  @empty {
+    <p>No orders yet</p>
+  }
+
+</div>
