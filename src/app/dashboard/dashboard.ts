@@ -20,19 +20,30 @@ export class Dashboard {
   ];
   countOrder = 0;
   pArray=new Array();
-  OnOrder(pid:number, item: string, price: number) {
-    alert(`You order: ${item} and Price:  ${price}. ID: ${pid}`);
-    let pOrder ={
+OnOrder(pid:number, item: string, price: number) {
+  alert(`You order: ${item} and Price:  ${price}. ID: ${pid}`);
+  
+  // Check if product already exists in pArray
+  const existingOrder = this.pArray.find(order => order.id === pid);
+  
+  if (existingOrder) {
+    // If exists, increase quantity and update price
+    existingOrder.qty++;
+    existingOrder.price = (price * existingOrder.qty); // Multiply price by quantity
+  } else {
+    // If new product, add to array
+    let pOrder = {
       id: pid,
       item: item,
-      price:price,
-      qty:1,
-      status:'ordering'
+      price: price, // Initial price (will be single item price)
+      qty: 1,
+      status: 'ordering'
     }
     this.pArray.push(pOrder);
-    console.log(this.pArray);
-    this.countOrder++;
-
   }
+  
+  console.log(this.pArray);
+  this.countOrder++;
+}
 
 }

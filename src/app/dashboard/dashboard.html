@@ -7,16 +7,19 @@
     }
  <button [innerText]="countOrder">Order: 0</button>
 
- <!-- Add this after your existing code -->
+ <!-- Display array list -->
 <div class="orders-container">
   <h3>Order History</h3>
   @for (order of pArray; track $index) {
     <div class="order-item">
-      <span>ID: {{order.id}}</span>
-      <span>Item: {{order.item}}</span>
+      <!-- item -->
+      <span>Name: {{order.item}}</span> 
+      <br>
       <span>Price: ${{order.price}}</span>
+      <br>
       <span>Qty: {{order.qty}}</span>
-      <span>Status: {{order.status}}</span>
+      <br>
+      <br>
     </div>
   }
   @empty {
