@@ -9,3 +9,68 @@
     color: white;
     align-content: center;
 }
+
+.print-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 0;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.print-btn:hover {
+  background-color: #45a049;
+}
+
+.order-summary {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+}
+
+.summary-line.total {
+  font-weight: bold;
+  font-size: 18px;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.print-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.print-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Print styles */
+@media print {
+  .print-btn {
+    display: none;
+  }
+}
