@@ -196,14 +196,13 @@ getCurrentDateTime(): string {
 }
 
 printReceipt() {
-  const printWindow = window.open('', '_blank', 'width=800,height=600');
+  const printWindow = window.open('', '', '');
   
   if (!printWindow) {
     alert('Please allow pop-ups to print the receipt');
     return;
   }
 
-  const receiptContent = this.generateReceiptContent();
   
   printWindow.document.write(`
     <!DOCTYPE html>
@@ -258,59 +257,5 @@ printReceipt() {
   printWindow.document.close();
 }
 
-private generateReceiptContent(): string {
-  return `
-    <div class="receipt-header">
-      <div class="receipt-title">BEAUTY STORE</div>
-      <div class="receipt-date">${this.getCurrentDateTime()}</div>
-      <div>Receipt #${Math.floor(100000 + Math.random() * 900000)}</div>
-    </div>
-
-    <table class="receipt-items">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Qty</th>
-          <th class="right">Price</th>
-          <th class="right">Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${this.pArray.map(order => `
-          <tr>
-            <td>${order.item}</td>
-            <td>${order.qty}</td>
-            <td class="right">$${this.products.find(p => p.prdid === order.id)?.price.toFixed(2)}</td>
-            <td class="right">$${order.price.toFixed(2)}</td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-
-    <div class="receipt-summary">
-      <div class="summary-line">
-        <span>Subtotal:</span>
-        <span>$${this.subtotal.toFixed(2)}</span>
-      </div>
-      <div class="summary-line">
-        <span>Tax (10%):</span>
-        <span>$${this.tax.toFixed(2)}</span>
-      </div>
-      <div class="summary-line">
-        <span>Discount (30%):</span>
-        <span>-$${this.discount.toFixed(2)}</span>
-      </div>
-      <div class="summary-line total-line">
-        <span>TOTAL:</span>
-        <span>$${this.total.toFixed(2)}</span>
-      </div>
-    </div>
-
-    <div class="thank-you">
-      Thank you for your purchase!<br>
-      Please visit again!
-    </div>
-  `;
-}
 
 }
