@@ -1,76 +1,371 @@
-.prd{
-    float: left ;
-    width: 200px;
-    height: 50px;
-    background-color: blueviolet;
-    margin: 5px;
-    border-radius: 5px;
-    text-align: center;
-    color: white;
-    align-content: center;
+
+/* General POS Layout */
+.pos-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 20px auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #f8f9fa; /* Light background */
+  min-height: 80vh;
 }
 
-.print-btn {
-  background-color: #4CAF50;
+/* 1. Product Selection Area (Left Column) */
+.product-selection {
+  flex: 3; /* Takes up about 60% of the space */
+  padding: 20px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+}
+
+.product-selection h2 {
+  color: #343a40;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.product-card {
+  background-color: #f1f1f1;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background-color: #e9ecef;
+}
+
+.item-name {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #007bff;
+  margin-bottom: 5px;
+}
+
+.item-id {
+  font-size: 0.8em;
+  color: #6c757d;
+  margin-bottom: 10px;
+}
+
+.item-price {
+  font-size: 1.3em;
+  color: #28a745;
+  font-weight: bold;
+}
+
+.add-indicator {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: #007bff;
+  font-size: 1.2em;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
+/* 2. Order Display and Summary Area (Right Column) */
+.order-summary-area {
+  flex: 2; /* Takes up about 40% of the space */
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #6c757d;
+}
+
+.order-header h2 {
+  margin: 0;
+  color: #343a40;
+}
+
+.main-order-btn {
+  padding: 8px 15px;
+  font-size: 1.1em;
+  font-weight: bold;
+  background-color: #dc3545; /* Red for attention */
   color: white;
   border: none;
-  padding: 12px 24px;
+  border-radius: 5px;
+  cursor: default;
+}
+
+.orders-list-container {
+  flex-grow: 1; /* Allows the list to take up available space */
+  overflow-y: auto; /* Scrollable list */
+  margin-bottom: 20px;
+}
+
+.empty-order-msg {
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 10px 0;
+  padding: 40px 0;
+  color: #6c757d;
+  font-style: italic;
+  border: 1px dashed #ced4da;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.order-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed #e9ecef;
+}
+
+.item-details {
+  flex-grow: 1;
+}
+
+.order-name {
+  font-weight: 500;
+  color: #343a40;
+}
+
+.order-price-unit {
+  font-size: 0.9em;
+  color: #6c757d;
+  margin-left: 10px;
+}
+
+.item-quantity-controls {
+  display: flex;
+  align-items: center;
+}
+
+.qty-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 3px;
   cursor: pointer;
-  border-radius: 4px;
-  width: 100%;
-  transition: background-color 0.3s;
+  font-weight: bold;
+  line-height: 1;
+  transition: background-color 0.2s;
 }
 
-.print-btn:hover {
-  background-color: #45a049;
+.qty-btn:hover {
+  background-color: #0056b3;
 }
 
-.order-summary {
-  border: 1px solid #ddd;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+.qty-btn:disabled {
+  background-color: #adb5bd;
+  cursor: not-allowed;
+}
+
+.order-qty {
+  margin: 0 10px;
+  font-weight: bold;
+  width: 20px;
+  text-align: center;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 0;
+  line-height: 1;
+  font-size: 1.1em;
+  transition: color 0.2s;
+}
+
+.remove-btn:hover {
+  color: #c82333;
+}
+
+/* 3. Summary Footer */
+.summary-footer {
+  border-top: 2px solid #e0e0e0;
+  padding-top: 20px;
+}
+
+.datetime-display {
+  text-align: center;
+  color: #6c757d;
+  font-weight: normal;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.summary-separator {
+  border: 0;
+  height: 1px;
+  background: #e9ecef;
+  margin: 10px 0;
+}
+
+.total-separator {
+  border-color: #343a40;
+  margin: 15px 0;
 }
 
 .summary-line {
   display: flex;
   justify-content: space-between;
-  margin: 8px 0;
+  margin-bottom: 8px;
+  font-size: 1em;
+  color: #343a40;
 }
 
-.summary-line.total {
+.discount-line span {
+  color: #28a745; /* Green for discount */
+}
+
+.total-line {
+  font-size: 1.3em;
   font-weight: bold;
-  font-size: 18px;
-  border-top: 1px solid #ccc;
-  padding-top: 10px;
-  margin-top: 10px;
+  color: #dc3545; /* Red for total */
+}
+
+.total-amount {
+  font-size: 1.4em;
 }
 
 .print-btn {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  font-size: 1.2em;
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 12px 24px;
-  font-size: 16px;
+  border-radius: 5px;
   cursor: pointer;
-  border-radius: 4px;
-  margin-top: 15px;
-  width: 100%;
+  transition: background-color 0.2s;
 }
 
 .print-btn:hover {
   background-color: #0056b3;
 }
 
-/* Print styles */
-@media print {
-  .print-btn {
-    display: none;
-  }
+/* Add these new styles to your existing CSS */
+
+.product-card {
+  /* Ensure product-card is a flex container for alignment */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 220px; /* Give the card a fixed height */
+}
+
+.image-wrapper {
+  width: 100%; /* Image container takes full width of the card */
+  height: 120px; /* Fixed height for the image area */
+  margin-bottom: 10px;
+  border-radius: 5px;
+  overflow: hidden; /* Clips any part of the image that overflows */
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  /* This ensures the image covers the area without distortion, cropping as necessary */
+  object-fit: cover; 
+  transition: transform 0.3s;
+}
+
+.product-card:hover .image-wrapper img {
+  transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.item-info {
+  /* Ensures the text info block is aligned */
+  width: 100%;
+  padding: 0 5px;
+}
+
+.product-card {
+  /* Ensure product-card is a flex container for alignment */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 220px; /* Give the card a fixed height */
+  /* Re-added general card styles for context */
+  background-color: #f1f1f1;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background-color: #e9ecef;
+}
+
+.image-wrapper {
+  width: 100%; /* Image container takes full width of the card */
+  height: 120px; /* Fixed height for the image area */
+  margin-bottom: 10px;
+  border-radius: 5px;
+  overflow: hidden; /* Clips any part of the image that overflows */
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  /* This ensures the image covers the area without distortion, cropping as necessary */
+  object-fit: cover; 
+  transition: transform 0.3s;
+}
+
+.product-card:hover .image-wrapper img {
+  transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.item-info {
+  /* Ensures the text info block is aligned */
+  width: 100%;
+  padding: 0 5px;
+}
+
+/* --- Added Clear Button Style --- */
+.clear-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 1em;
+    background-color: #6c757d; /* Gray color for a secondary action */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.clear-btn:hover {
+    background-color: #5a6268;
 }

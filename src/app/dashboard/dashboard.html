@@ -1,58 +1,87 @@
-@for (p of products; track $index){
-<div class="prd" (click)="OnOrder(p.prdid, p.item, p.price)">
-  <span>{{ p.prdid }}</span>
-  <span>{{ p.item }}</span>
-  <span>${{ p.price }}</span>
-</div>
-}
-<button [innerText]="countOrder">Order: 0</button>
+<div class="pos-container">
 
-<!-- Display array list -->
-<div class="orders-container">
-  <h3>Order History</h3>
-  @for (order of pArray; track $index) {
-    <div class="order-item">
-      <span>Name: {{order.item}}</span> 
-      <br>
-      <span>Price: ${{order.price}}</span>
-      <br>
-      <span>Qty: {{order.qty}}</span>
-      <br>
-      <!-- Quantity controls -->
-      <button (click)="decreaseOrder(order.id)" class="decrease-btn">-</button>
-      <button (click)="increaseOrder(order.id)" class="increase-btn">+</button>
-      <!-- Remove button -->
-      <button (click)="removeOrder(order.id)" class="remove-btn">Remove All</button>
-      <br>
-      <br>
-    </div>
-  }
-  @empty {
-    <p>No orders yet</p>
-  }
+  <div class="product-selection">
+    <h2>🛍️ Products</h2>
 
-  <!-- Add this summary section -->
-  <div class="order-summary" *ngIf="pArray.length > 0">
-    <h3>Order Summary</h3>
-    <h3>{{getCurrentDateTime()}}
-    </h3>
-    <div class="summary-line">
-      <span>Subtotal:</span>
-      <span>${{subtotal.toFixed(2)}}</span>
-    </div>
-    <div class="summary-line">
-      <span>Tax (10%):</span>
-      <span>${{tax.toFixed(2)}}</span>
-    </div>
-    <div class="summary-line">
-      <span>Discount (30%):</span>
-      <span>${{discount.toFixed(2)}}</span>
-    </div>
-    <div class="summary-line total">
-      <span>Total:</span>
-      <span>${{total.toFixed(2)}}</span>
+    <div class="product-grid">
+      @for (p of products; track $index){
+        <div class="product-card" (click)="OnOrder(p.prdid, p.item, p.price)">
+          <div class="image-wrapper">
+            <img [src]="p.imgUrl" [alt]="p.item">
+          </div>
+          <div class="item-info">
+            <div class="item-name">{{ p.item }}</div>
+            <div class="item-id">#{{ p.prdid }}</div>
+            <div class="item-price">${{ p.price.toFixed(2) }}</div>
+          </div>
+        </div>
+      }
     </div>
   </div>
 
-  <button (click)="printReceipt()" class="print-btn">Print Receipt</button>
-</div>
+  <div class="order-summary-area">
+    <div class="order-header">
+      <h2>🧾 Current Order</h2>
+      <button class="main-order-btn" [innerText]="'Order: ' + countOrder">Order: 0</button>
+    </div>
+
+    <div class="orders-list-container">
+      @for (order of pArray; track order.id) {
+        <div class="order-item-row">
+          <div class="item-details">
+            <span class="order-name">{{order.item}}</span>
+            <span class="order-price-unit">${{(order.price / order.qty).toFixed(2)}}</span>
+          </div>
+
+          <div class="item-quantity-controls">
+            <button (click)="decreaseOrder(order.id)" class="qty-btn decrease-btn" [disabled]="order.qty <= 1">-</button>
+            <span class="order-qty">{{order.qty}}</span>
+            <button (click)="increaseOrder(order.id)" class="qty-btn increase-btn">+</button>
+            <button (click)="removeOrder(order.id)" class="remove-btn">
+              <span class="material-icons">❌</span>
+            </button>
+          </div>
+        </div>
+      }
+      @empty {
+        <div class="empty-order-msg">
+          <p>Click a product on the left to add an item.</p>
+        </div>
+      }
+    </div>
+    
+    <div class="summary-footer" *ngIf="pArray.length > 0">
+      <div class="order-summary">
+        <h4 class="datetime-display">
+          Date: {{getCurrentDateTime().date}} | Time: {{getCurrentDateTime().time}}
+        </h4>
+        
+        <hr class="summary-separator">
+
+        <div class="summary-line">
+          <span>Subtotal:</span>
+          <span class="amount">${{subtotal.toFixed(2)}}</span>
+        </div>
+        <div class="summary-line">
+          <span>Tax (10%):</span>
+          <span class="amount">${{tax.toFixed(2)}}</span>
+        </div>
+        <div class="summary-line discount-line">
+          <span>Discount (30%):</span>
+          <span class="amount">${{discount.toFixed(2)}}</span>
+        </div>
+        
+        <hr class="summary-separator total-separator">
+
+        <div class="summary-line total-line">
+          <strong>TOTAL:</strong>
+          <strong class="total-amount">${{total.toFixed(2)}}</strong>
+        </div>
+      </div>
+
+      <button (click)="printReceipt()" class="print-btn">🖨️ Complete & Print Receipt</button>
+      <button (click)="clearStorage()" class="clear-btn">Clear Order</button>
+    </div>
+
+  </div> </div> 
+

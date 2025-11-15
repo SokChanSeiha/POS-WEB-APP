@@ -1,6 +1,23 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
+// Define the interface for products
+interface Product {
+  prdid: number;
+  item: string;
+  price: number;
+  imgUrl: string; // <-- Added image URL property
+}
+
+// Define the interface for an order item (pArray)
+interface OrderItem {
+  id: number;
+  item: string;
+  price: number; // Note: This holds the calculated TOTAL price for the item (unit price * qty)
+  qty: number;
+  status: string;
+}
+
 @Component({
   selector: 'app-dashboard',
   imports: [CommonModule],
@@ -8,13 +25,14 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
-  products = [
-    { prdid: 1, item: 'Sunscreen', price: 10.12 },
-    { prdid: 2, item: 'Serum', price: 15.17 },
-    { prdid: 3, item: 'Cream', price: 13.25 },
-    { prdid: 4, item: 'Lipstick', price: 9.11 },
-    { prdid: 5, item: 'Foam', price: 6.11 },
-    { prdid: 6, item: 'Toner', price: 10.14 },
+  products: Product[] = [
+    // Changed type to Product[]
+    { prdid: 1, item: 'Sunscreen', price: 10.12, imgUrl: 'img/image1.png' },
+    { prdid: 2, item: 'Serum', price: 15.17, imgUrl: 'img/image2.png' },
+    { prdid: 3, item: 'Cream', price: 13.25, imgUrl: 'img/image3.png' },
+    { prdid: 4, item: 'Lipstick', price: 9.11, imgUrl: 'img/image4.png' },
+    { prdid: 5, item: 'Foam', price: 6.11, imgUrl: 'img/image5.png' },
+    { prdid: 6, item: 'Toner', price: 10.14, imgUrl: 'img/image6.png' },
   ];
 
   countOrder = 0;
@@ -173,7 +191,7 @@ export class Dashboard implements OnInit {
   }
 
   // Get current date and time in custom format
-getCurrentDateTime(): { date: string, time: string } {
+  getCurrentDateTime(): { date: string; time: string } {
     const now = new Date();
 
     // Get date components
@@ -207,9 +225,9 @@ getCurrentDateTime(): { date: string, time: string } {
 
     return {
       date: `${day}-${month}-${year}`,
-      time: `${formattedHours}:${minutes} ${ampm}`
+      time: `${formattedHours}:${minutes} ${ampm}`,
     };
-}
+  }
 
   printReceipt() {
     const printWindow = window.open('', '', '');
@@ -382,7 +400,7 @@ getCurrentDateTime(): { date: string, time: string } {
               <tr>
                 <td>${order.item}</td>
                 <td class="qty">${order.qty}</td>
-                <td class="qty">$${(order.price) / (order.qty)}</td>
+                <td class="qty">$${order.price / order.qty}</td>
                 <td class="total-cell">$${order.price.toFixed(2)}</td>
               </tr>
             `
