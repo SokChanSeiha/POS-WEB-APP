@@ -1,23 +1,28 @@
-@for (p of products;  track $index){
-    <div class="prd" (click)="OnOrder(p.prdid, p.item, p.price)">
-        <span>{{p.prdid}}</span>
-        <span>{{p.item}}</span>
-        <span>${{p.price}}</span>
-    </div>
-    }
- <button [innerText]="countOrder">Order: 0</button>
+@for (p of products; track $index){
+<div class="prd" (click)="OnOrder(p.prdid, p.item, p.price)">
+  <span>{{ p.prdid }}</span>
+  <span>{{ p.item }}</span>
+  <span>${{ p.price }}</span>
+</div>
+}
+<button [innerText]="countOrder">Order: 0</button>
 
- <!-- Display array list -->
+<!-- Display array list -->
 <div class="orders-container">
   <h3>Order History</h3>
   @for (order of pArray; track $index) {
     <div class="order-item">
-      <!-- item -->
       <span>Name: {{order.item}}</span> 
       <br>
       <span>Price: ${{order.price}}</span>
       <br>
       <span>Qty: {{order.qty}}</span>
+      <br>
+      <!-- Quantity controls -->
+      <button (click)="decreaseOrder(order.id)" class="decrease-btn">-</button>
+      <button (click)="increaseOrder(order.id)" class="increase-btn">+</button>
+      <!-- Remove button -->
+      <button (click)="removeOrder(order.id)" class="remove-btn">Remove All</button>
       <br>
       <br>
     </div>
@@ -26,4 +31,26 @@
     <p>No orders yet</p>
   }
 
+  <!-- Add this summary section -->
+  <div class="order-summary" *ngIf="pArray.length > 0">
+    <h3>Order Summary</h3>
+    <h3>{{getCurrentDateTime()}}
+    </h3>
+    <div class="summary-line">
+      <span>Subtotal:</span>
+      <span>${{subtotal.toFixed(2)}}</span>
+    </div>
+    <div class="summary-line">
+      <span>Tax (10%):</span>
+      <span>${{tax.toFixed(2)}}</span>
+    </div>
+    <div class="summary-line">
+      <span>Discount (30%):</span>
+      <span>${{discount.toFixed(2)}}</span>
+    </div>
+    <div class="summary-line total">
+      <span>Total:</span>
+      <span>${{total.toFixed(2)}}</span>
+    </div>
+  </div>
 </div>

@@ -23,22 +23,18 @@ export class Dashboard implements OnInit {
   constructor(@Inject(PLATFORM_ID) private platformId: any) {}
 
   ngOnInit() {
-    // Load orders from localStorage when component initializes (browser only)
     this.loadOrdersFromStorage();
   }
 
   OnOrder(pid: number, item: string, price: number) {
     alert(`You order: ${item} and Price: ${price}. ID: ${pid}`);
     
-    // Check if product already exists in pArray
     const existingOrder = this.pArray.find(order => order.id === pid);
     
     if (existingOrder) {
-      // If exists, increase quantity and update price
       existingOrder.qty++;
       existingOrder.price = (price * existingOrder.qty);
     } else {
-      // If new product, add to array
       let pOrder = {
         id: pid,
         item: item,
@@ -49,43 +45,100 @@ export class Dashboard implements OnInit {
       this.pArray.push(pOrder);
     }
     
-    // Update the count
     this.countOrder++;
-    
-    // Save to localStorage (browser only)
     this.saveOrdersToStorage();
-    
     console.log(this.pArray);
   }
 
-private saveOrdersToStorage() {
-  if (typeof localStorage !== 'undefined') {
-    const ordersData = {
-      orders: this.pArray,
-      count: this.countOrder
-    };
-    localStorage.setItem('productOrders', JSON.stringify(ordersData));
-  }
-}
-
-private loadOrdersFromStorage() {
-  if (typeof localStorage !== 'undefined') {
-    const storedOrders = localStorage.getItem('productOrders');
-    if (storedOrders) {
-      try {
-        const ordersData = JSON.parse(storedOrders);
-        this.pArray = ordersData.orders || [];
-        this.countOrder = ordersData.count || 0;
-      } catch (error) {
-        console.error('Error parsing stored orders:', error);
-        this.pArray = [];
-        this.countOrder = 0;
+  // Increase quantity for existing order
+  increaseOrder(pid: number) {
+    const existingOrder = this.pArray.find(order => order.id === pid);
+    
+    if (existingOrder) {
+      // Find the original product price from products array
+      const originalProduct = this.products.find(p => p.prdid === pid);
+      if (originalProduct) {
+        existingOrder.qty++;
+        existingOrder.price = (originalProduct.price * existingOrder.qty);
+        this.countOrder++;
+        this.saveOrdersToStorage();
+        console.log('Order increased:', this.pArray);
       }
     }
   }
+
+  // Decrease quantity or remove order
+  decreaseOrder(pid: number) {
+    const orderIndex = this.pArray.findIndex(order => order.id === pid);
+    
+    if (orderIndex !== -1) {
+      const order = this.pArray[orderIndex];
+      
+      if (order.qty > 1) {
+        // Find the original product price
+        const originalProduct = this.products.find(p => p.prdid === pid);
+        if (originalProduct) {
+          order.qty--;
+          order.price = (originalProduct.price * order.qty);
+          this.countOrder--;
+        }
+      } else {
+        // Remove the entire order
+        this.pArray.splice(orderIndex, 1);
+        this.countOrder--;
+      }
+      
+      this.saveOrdersToStorage();
+      console.log('Order updated:', this.pArray);
+    }
+  }
+
+  private saveOrdersToStorage() {
+    if (typeof localStorage !== 'undefined') {
+      const ordersData = {
+        orders: this.pArray,
+        count: this.countOrder
+      };
+      localStorage.setItem('productOrders', JSON.stringify(ordersData));
+    }
+  }
+
+  private loadOrdersFromStorage() {
+    if (typeof localStorage !== 'undefined') {
+      const storedOrders = localStorage.getItem('productOrders');
+      if (storedOrders) {
+        try {
+          const ordersData = JSON.parse(storedOrders);
+          this.pArray = ordersData.orders || [];
+          this.countOrder = ordersData.count || 0;
+        } catch (error) {
+          console.error('Error parsing stored orders:', error);
+          this.pArray = [];
+          this.countOrder = 0;
+        }
+      }
+    }
+  }
+
+// Remove entire order regardless of quantity
+removeOrder(pid: number) {
+  const orderIndex = this.pArray.findIndex(order => order.id === pid);
+  
+  if (orderIndex !== -1) {
+    const order = this.pArray[orderIndex];
+    
+    // Subtract the quantity from total count
+    this.countOrder -= order.qty;
+    
+    // Remove the entire order from array
+    this.pArray.splice(orderIndex, 1);
+    
+    // Update localStorage
+    this.saveOrdersToStorage();
+    console.log('Order removed:', this.pArray);
+  }
 }
 
-  // Optional: Method to clear localStorage (browser only)
   clearStorage() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('productOrders');
@@ -95,11 +148,51 @@ private loadOrdersFromStorage() {
     }
   }
 
-  // Optional: Method to get all stored orders (for debugging)
   getStoredOrders() {
     if (isPlatformBrowser(this.platformId)) {
       return localStorage.getItem('productOrders');
     }
     return null;
   }
+
+  // Add these calculation methods
+get subtotal(): number {
+  return this.pArray.reduce((total, order) => total + order.price, 0);
+}
+
+get tax(): number {
+  return this.subtotal * 0.10; // 10% tax
+}
+
+get discount(): number {
+  return this.subtotal * 0.30; // 30% discount
+}
+
+get total(): number {
+  return (this.subtotal + this.tax) - this.discount;
+}
+
+// Get current date and time in custom format
+getCurrentDateTime(): string {
+  const now = new Date();
+  
+  // Get date components
+  const day = String(now.getDate()).padStart(2, '0');
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month = monthNames[now.getMonth()];
+  const year = now.getFullYear();
+  
+  // Get time components
+  let hours = now.getHours();
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  
+  // Convert to 12-hour format
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  const formattedHours = String(hours).padStart(2, '0');
+  
+  return `${day}-${month}-${year} | ${formattedHours}:${minutes} ${ampm}`;
+}
+
 }
