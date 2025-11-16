@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +15,8 @@ export class Login {
   email: string = '';
   password: string = '';
 
+  constructor(private router: Router) {}
+
   onSubmit() {
     const isValid = this.validateCredentials(this.email, this.password);
     
@@ -23,7 +25,12 @@ export class Login {
       this.showAlert = true;
     } else {
       this.loginHelpText = "Login successful";
-      this.showAlert = true; // Show the success message
+      this.showAlert = true;
+      
+      // Redirect to dashboard after successful login
+      setTimeout(() => {
+        this.router.navigate(['/dashboard']);
+      }, 1000); // Optional: 1 second delay to show success message
     }
   }
 
